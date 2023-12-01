@@ -1,0 +1,21 @@
+services:
+  nginx:
+    container_name: germes-nginx-web
+    image: nginx:latest
+    restart: always
+    ports:
+      - "80:80"
+      - "443:443"
+
+    volumes:
+      - './configs/nginx/conf.d/:/etc/nginx/conf.d/:rw'
+      - './configs/nginx/nginx.conf:/etc/nginx/nginx.conf:rw'
+      - './configs/nginx/ssl:/etc/nginx/ssl/:rw'
+      - './_logs:/var/log/nginx'
+      #- ../:/data
+    networks:
+      germes:
+        ipv4_address: 172.90.1.5
+networks:
+    germes:
+        external: true

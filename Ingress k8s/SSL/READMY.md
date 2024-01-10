@@ -1,0 +1,2 @@
+Helm install --set controller.service.loadBalancerIP=Uipadress ingress-nginx ingress-nginx/ingress-nginx -n Unamespace
+kubectl create secret tls tls-secret --cert=fullchain.txt --key=key.txt -n Unamespace

@@ -1,0 +1,41 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: admin-panel
+  namespace: prod
+  labels:
+    tier: admin-panel
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: admin-panel
+      tier: admin-panel
+  template:
+    metadata:
+      labels:
+        app: admin-panel
+        tier: admin-panel
+    spec:
+      volumes:
+      - name: admin-panel
+        persistentVolumeClaim:
+          claimName: admin-panel
+          readOnly: false
+      containers:
+      - name: admin-panel
+        image: admin-panel:__VERSION__
+        command: ["/bin/sh"]
+        args: 
+          - "-c"
+          - |
+            mv .envk8s .env &&
+            chown -R www-data:www-data storage/ &&
+            composer install &&
+            cp -r /data /files &&
+            php artisan admin:publish      
+            cd && chmod -R 777 /data &&
+            docker-php-entrypoint php-fpm
+        volumeMounts:
+        - name: admin-panel
+          mountPath: /files

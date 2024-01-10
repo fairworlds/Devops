@@ -1,0 +1,39 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: admin-nginx
+  labels:
+    tier: admin-panel
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: admin-nginx
+      tier: admin-panel
+  template:
+    metadata:
+      labels:
+        app: admin-nginx
+        tier: admin-panel
+    spec:
+      volumes:
+      - name: admin-panel
+        persistentVolumeClaim:
+          claimName: admin-panel
+          readOnly: false
+      - name: config
+        configMap:
+          name: admin-nginx
+          items:
+          - key: config
+            path: site.conf
+      containers:
+      - name: nginx
+        image: nginx:latest
+        ports:
+        - containerPort: 80
+        volumeMounts:
+        - name: admin-panel
+          mountPath: /files
+        - name: config
+          mountPath: /etc/nginx/conf.d

@@ -1,0 +1,15 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: admin-nginx
+  labels:
+    tier: admin-panel
+spec:
+  selector:
+    app: admin-nginx
+    tier: admin-panel
+  ports:
+  - protocol: TCP
+    port: 80
+  type: ClusterIP
+
